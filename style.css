@@ -1,5 +1,9 @@
+* {
+    font-family: 'Poppins', sans-serif;
+}
+
+
 body {
-    font-family: 'Arial', sans-serif;
     background-color: #f0f4f8;
     color: #333;
     margin: 0;
@@ -10,6 +14,8 @@ body {
     height: 100vh;
     overflow-x: hidden; /* Evitar scroll horizontal */
 }
+
+
 
 .container {
     background-color: #fff;

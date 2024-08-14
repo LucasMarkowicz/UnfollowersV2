@@ -96,6 +96,10 @@ function displayResult(result) {
     if (result.length === 0) {
         resultContainer.innerText = "Todos los usuarios que sigues también te siguen.";
     } else {
-        resultContainer.innerHTML = `<p>Los siguientes usuarios no te siguen de vuelta:</p><ul>${result.map(user => `<li><a href="${user.link}" target="_blank">${user.username}</a></li>`).join('')}</ul>`;
+        resultContainer.innerHTML = `
+            <p>Los siguientes usuarios no te siguen de vuelta (${result.length}):</p>
+            <ul>${result.map(user => `<li><a href="${user.link}" target="_blank">${user.username}</a></li>`).join('')}</ul>
+        `;
     }
 }
+
