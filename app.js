@@ -5,6 +5,20 @@ let followingData = null;
 
 function handleZipFile(event) {
     const file = event.target.files[0];
+
+    // Validar que el archivo es un ZIP
+    if (!file.name.endsWith('.zip')) {
+        alert("Por favor, cargue un archivo ZIP válido.");
+        return;
+    }
+
+    // Validar el tamaño del archivo (limite de 5MB, puedes ajustarlo si es necesario)
+    const maxSize = 5 * 1024 * 1024; // 5MB
+    if (file.size > maxSize) {
+        alert("El archivo ZIP es demasiado grande. El tamaño máximo permitido es de 5MB.");
+        return;
+    }
+
     const jszip = new JSZip();
 
     jszip.loadAsync(file).then(zip => {
@@ -23,14 +37,25 @@ function handleZipFile(event) {
             return;
         }
 
+        // Procesar archivos con manejo de errores
         followersFile.async("string").then(content => {
-            followersData = JSON.parse(content);
-            checkIfReady();
+            try {
+                followersData = JSON.parse(content);
+                checkIfReady();
+            } catch (error) {
+                alert("Error al procesar followers_1.json. Asegúrese de que el archivo JSON esté correctamente formateado.");
+                console.error(error);
+            }
         });
 
         followingFile.async("string").then(content => {
-            followingData = JSON.parse(content);
-            checkIfReady();
+            try {
+                followingData = JSON.parse(content);
+                checkIfReady();
+            } catch (error) {
+                alert("Error al procesar following.json. Asegúrese de que el archivo JSON esté correctamente formateado.");
+                console.error(error);
+            }
         });
     }).catch(error => {
         alert("Hubo un error al procesar el archivo ZIP.");
