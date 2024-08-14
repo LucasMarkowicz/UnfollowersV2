@@ -57,7 +57,7 @@ input[type="file"]::-webkit-file-upload-button {
 }
 
 input[type="file"]::before {
-    content: 'Seleccionar archivo';
+    content: 'Please select your file';
     display: inline-block;
     background: #2980b9;
     color: white;

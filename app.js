@@ -8,14 +8,14 @@ function handleZipFile(event) {
 
     // Validar que el archivo es un ZIP
     if (!file.name.endsWith('.zip')) {
-        alert("Por favor, cargue un archivo ZIP válido.");
+        alert("Please upload a valid .zip file.");
         return;
     }
 
     // Validar el tamaño del archivo (limite de 5MB, puedes ajustarlo si es necesario)
     const maxSize = 5 * 1024 * 1024; // 5MB
     if (file.size > maxSize) {
-        alert("El archivo ZIP es demasiado grande. El tamaño máximo permitido es de 5MB.");
+        alert("The .zip file is to big. The max size is 5MB.");
         return;
     }
 
@@ -25,7 +25,7 @@ function handleZipFile(event) {
         const folder = zip.folder("connections/followers_and_following");
 
         if (!folder) {
-            alert("El archivo ZIP no contiene la estructura de carpetas requerida.");
+            alert("The .zip file you uploaded doesn't have the required structure.");
             return;
         }
 
@@ -33,7 +33,7 @@ function handleZipFile(event) {
         const followingFile = folder.file("following.json");
 
         if (!followersFile || !followingFile) {
-            alert("El archivo ZIP no contiene los archivos necesarios (followers_1.json y following.json) en la carpeta correcta.");
+            alert("The .zip file doesn't have the required files (followers_1.json y following.json).");
             return;
         }
 
@@ -43,7 +43,7 @@ function handleZipFile(event) {
                 followersData = JSON.parse(content);
                 checkIfReady();
             } catch (error) {
-                alert("Error al procesar followers_1.json. Asegúrese de que el archivo JSON esté correctamente formateado.");
+                alert("Error on processing followers_1.json. Please make sure the JSON file is correctly formmated.");
                 console.error(error);
             }
         });
@@ -53,12 +53,12 @@ function handleZipFile(event) {
                 followingData = JSON.parse(content);
                 checkIfReady();
             } catch (error) {
-                alert("Error al procesar following.json. Asegúrese de que el archivo JSON esté correctamente formateado.");
+                alert("Error on processing following.json. Please make sure the JSON file is correctly formmated.");
                 console.error(error);
             }
         });
     }).catch(error => {
-        alert("Hubo un error al procesar el archivo ZIP.");
+        alert("There was an error on processing the .zip file.");
         console.error(error);
     });
 }
@@ -94,10 +94,10 @@ function displayResult(result) {
     const resultContainer = document.getElementById('result');
 
     if (result.length === 0) {
-        resultContainer.innerText = "Todos los usuarios que sigues también te siguen.";
+        resultContainer.innerText = "You follow all these users but they don't follow you back.";
     } else {
         resultContainer.innerHTML = `
-            <p>Los siguientes usuarios no te siguen de vuelta (${result.length}):</p>
+            <p>The following users doesn't follow you back (${result.length}):</p>
             <ul>${result.map(user => `<li><a href="${user.link}" target="_blank">${user.username}</a></li>`).join('')}</ul>
         `;
     }
