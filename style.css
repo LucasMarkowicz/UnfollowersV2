@@ -2,7 +2,6 @@
     font-family: 'Poppins', sans-serif;
 }
 
-
 body {
     background-color: #f0f4f8;
     color: #333;
@@ -14,8 +13,6 @@ body {
     height: 100vh;
     overflow-x: hidden; /* Evitar scroll horizontal */
 }
-
-
 
 .container {
     background-color: #fff;
@@ -67,6 +64,20 @@ input[type="file"]::before {
     cursor: pointer;
 }
 
+input[type="file"]::after {
+    content: attr(data-file-name);
+    display: inline-block;
+    font-size: 12px; /* Tamaño de fuente ajustado */
+    text-align: center;
+    padding: 10px;
+    color: #7f8c8d;
+    max-width: 70%; /* Ajustar el tamaño máximo para evitar que se corte */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+}
+
 button {
     width: 100%;
     padding: 10px;
@@ -105,4 +116,3 @@ button:hover:not(:disabled) {
 #result li {
     padding: 5px 0;
 }
-
