@@ -22,18 +22,31 @@ function handleZipFile(event) {
     const jszip = new JSZip();
 
     jszip.loadAsync(file).then(zip => {
-        const folder = zip.folder("connections/followers_and_following");
+        // Buscar los archivos en cualquier ubicación del ZIP
+        let followersFile = zip.file("followers_1.json");
+        let followingFile = zip.file("following.json");
 
-        if (!folder) {
-            alert("The .zip file you uploaded doesn't have the required structure.");
-            return;
+        // Si no están en la raíz, buscar en la carpeta común
+        if (!followersFile || !followingFile) {
+            const folder = zip.folder("connections/followers_and_following");
+            if (folder) {
+                followersFile = folder.file("followers_1.json");
+                followingFile = folder.file("following.json");
+            }
         }
 
-        const followersFile = folder.file("followers_1.json");
-        const followingFile = folder.file("following.json");
+        // También buscar solo en la raíz o en cualquier subcarpeta
+        if (!followersFile) {
+            const allFiles = Object.keys(zip.files);
+            const followersPath = allFiles.find(path => path.includes("followers_1.json"));
+            const followingPath = allFiles.find(path => path.includes("following.json"));
+            
+            if (followersPath) followersFile = zip.file(followersPath);
+            if (followingPath) followingFile = zip.file(followingPath);
+        }
 
         if (!followersFile || !followingFile) {
-            alert("The .zip file doesn't have the required files (followers_1.json y following.json).");
+            alert("The .zip file doesn't have the required files (followers_1.json and following.json).");
             return;
         }
 
@@ -75,15 +88,18 @@ document.getElementById('compareButton').addEventListener('click', function() {
 });
 
 function compareFollowers(followers, following) {
+    // Crear un Set con los usernames de los seguidores
     const followersSet = new Set(
         followers.map(follower => follower.string_list_data[0].value)
     );
 
+    // Filtrar los que sigues pero no te siguen de vuelta
     const notFollowingBack = following.relationships_following.filter(person => {
-        const username = person.string_list_data[0].value;
+        // El username está en el campo 'title' en el nuevo formato
+        const username = person.title;
         return !followersSet.has(username);
     }).map(person => ({
-        username: person.string_list_data[0].value,
+        username: person.title,
         link: person.string_list_data[0].href
     }));
 
@@ -94,10 +110,10 @@ function displayResult(result) {
     const resultContainer = document.getElementById('result');
 
     if (result.length === 0) {
-        resultContainer.innerText = "You follow all these users but they don't follow you back.";
+        resultContainer.innerText = "Everyone you follow also follows you back!";
     } else {
         resultContainer.innerHTML = `
-            <p>The following users doesn't follow you back (${result.length}):</p>
+            <p>The following users don't follow you back (${result.length}):</p>
             <ul>${result.map(user => `<li><a href="${user.link}" target="_blank">${user.username}</a></li>`).join('')}</ul>
         `;
     }
